@@ -48,12 +48,11 @@ const Quiz = ({questions, answers}) => {
   return (
     <div className='quiz'> 
       <div className='quiz-container'> 
-      <p>Quiz section</p>
         {
          questionsDiv
         }
-      <button onClick={submitAnswers}>Submit answers</button>  
-      <p>You've gotten {correctAnswerSum} out of 5</p>
+      <button className='check-answers' onClick={submitAnswers}>Check answers</button>  
+      {/* <p>You've gotten {correctAnswerSum} out of 5</p> */}
       </div>
     </div>
   )

@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import Blob5 from './assets/blob5.svg' 
+import Blob1 from './assets/blobs.svg'
 import Quiz from './components/Quiz'
 import Data from './Data'
 import './App.css'
@@ -24,10 +26,9 @@ function App() {
 
   return (
     <div className="App">
-         <Quiz questions={questions} answers={answers}/> 
-         <p>
-           Data loading
-         </p>
+      <img className="blob-five" src={Blob5} alt='blob 5' /> 
+      <Quiz questions={questions} answers={answers}/> 
+      <img className="blob-one" src={Blob1} alt='blob 1' /> 
     </div>
   )
 }
