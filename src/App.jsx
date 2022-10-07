@@ -6,7 +6,10 @@ import Quiz from './components/Quiz'
 import Data from './Data'
 import './App.css'
 
-function App() {
+
+function App() { 
+  
+  console.log("Component rendered!")
   const [questions, setQuestions] = useState(
     Data.data.questions.map( question => {
       return {
@@ -20,9 +23,12 @@ function App() {
   const [questionsDiv, setQuestionsDiv] = useState(); 
   const [choosenAnswers, setChoosenAnswers] = useState([]); 
   const [selectedQuestions, setSelectedQuestions] = useState([]);
-  const [correctAnswerSum, setCorrectAnswerSum] = useState(0); 
+  const [correctAnswerSum, setCorrectAnswerSum] = useState(0);
+  const [hold, setHold] = useState(false);  
 
-
+  const styles = {
+    backgroundColor: hold ? "#b7c0ec" : "",  
+  }
 
   const randomNumber = () => {
     return Math.floor(Math.random() * 5)
@@ -30,15 +36,15 @@ function App() {
 
   console.log("Random number: ", randomNumber())
 
+
   const slicedNumber = () => {
-    return (randomNumber() + 5); 
+    return (randomNumber() + 5) + 1; 
   }
 
   console.log("Sliced number: ", slicedNumber())
 
-  function chooseAnswers(answer, questionId) {
-    console.log(answer, questionId); 
-    
+  function chooseAnswers(answer) {
+    setHold(current => !current); 
     setChoosenAnswers(prevAnswers => [...prevAnswers, answer])
     
     // setQuestions( prevQuestion => prevQuestion.forEach( question => {
@@ -48,12 +54,13 @@ function App() {
     //   } : 
     //   question
     // }))
+    console.log(hold)
 
   }
 
   function settingQuestions() {
     setQuestionsDiv(); 
-    setAnswers();
+    setAnswers([]);
 
     let selectedQuestions = questions.slice(randomNumber(), slicedNumber()); 
     setAnswers( 
@@ -61,8 +68,6 @@ function App() {
         answers.push(question.answer)
       })
     )
-
-    console.log("Selcted answers: ", answers); 
     
     setQuestionsDiv(
       selectedQuestions.map( question => {
@@ -70,10 +75,10 @@ function App() {
            <div className='question' key={question.id}>
               <p className='question-title'>{ question.qn }</p> 
               <ul className='question-answers'> 
-                 <li className='question-answer' onClick={ () => chooseAnswers(question.a, question.id)}>{ question.a }</li>
-                 <li className='question-answer' onClick={ () => chooseAnswers(question.b, question.id)}>{ question.b }</li>
-                 <li className='question-answer' onClick={ () => chooseAnswers(question.c, question.id)}>{ question.c }</li>
-                 <li className='question-answer' onClick={ () => chooseAnswers(question.d, question.id)}>{ question.d }</li>
+                 <li className='question-answer' onClick={ () => { chooseAnswers(question.a); }} style={styles}>{ question.a }</li>
+                 <li className='question-answer' onClick={ () => { chooseAnswers(question.b); }} style={styles}>{ question.b }</li>
+                 <li className='question-answer' onClick={ () => { chooseAnswers(question.c); }} style={styles}>{ question.c }</li>
+                 <li className='question-answer' onClick={ () => { chooseAnswers(question.d); }} style={styles}>{ question.d }</li>
              </ul>
          </div>
         )
@@ -83,35 +88,36 @@ function App() {
     console.log("Selected questions: ", selectedQuestions)
   }
 
+  useEffect( () => {
+    settingQuestions(); 
+  }, [])
+
+  function settingAnswers() {
+    selectedQuestions.forEach( question => {
+      setAnswers( prevAnswers => [...prevAnswers, question.answer])
+    })
+    console.log("(Setting answers function) Correct answers are: ", answers); 
+  } 
+
+  useEffect( () => {
+    settingAnswers()
+  }, [questions]); 
+
   function submitAnswers() {
     let correctAnswerSum = 0; 
 
-    // choosenAnswers.forEach( selectedAnswer => {
-    //   answers.forEach( answer => {
-    //     if (answer === selectedAnswer){
-    //       correctAnswerSum++;  
-    //     }
-    //   })
-    // }) 
-
-    // console.log(correctAnswerSum);
-    // setCorrectAnswerSum(correctAnswerSum);  
-
-    console.log(choosenAnswers.length); 
-    console.log(choosenAnswers); 
-  } 
-
-  function settingAnswers() {
-    // for(let i = 0; i <= questions.length; i++){
-    //   // setAnswers(Data.data.questions[i].answer); 
-    //   answers.push(Data.data.questions[i].answer)
-    // }
-  } 
-
-
-  // useEffect( () => {
-  //   settingAnswers()
-  // }, [questions]); 
+    choosenAnswers.forEach( selectedAnswer => {
+      console.log("The choosen answer is: ", selectedAnswer); 
+      console.log("Correct answers are: ", answers); 
+      
+      // answers.forEach( answer => {
+      //   if (answer === selectedAnswer){
+      //     correctAnswerSum++
+      //   }
+      // }) 
+    }) 
+  
+  }
 
   return (
     <div className="App">
