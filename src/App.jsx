@@ -30,19 +30,6 @@ function App() {
     backgroundColor: hold ? "#b7c0ec" : "",  
   }
 
-  const randomNumber = () => {
-    return Math.floor(Math.random() * 5)
-  }
-
-  console.log("Random number: ", randomNumber())
-
-
-  const slicedNumber = () => {
-    return (randomNumber() + 5) + 1; 
-  }
-
-  console.log("Sliced number: ", slicedNumber())
-
   function chooseAnswers(answer) {
     setHold(current => !current); 
     setChoosenAnswers(prevAnswers => [...prevAnswers, answer])
@@ -54,15 +41,16 @@ function App() {
     //   } : 
     //   question
     // }))
-    console.log(hold)
 
   }
 
   function settingQuestions() {
-    setQuestionsDiv(); 
-    setAnswers([]);
 
-    let selectedQuestions = questions.slice(randomNumber(), slicedNumber()); 
+    let randomNum = Math.floor(Math.random() * 5); 
+    let slicedNum = randomNum + 5; 
+    let selectedQuestions = questions.slice(randomNum, slicedNum); 
+
+
     setAnswers( 
       selectedQuestions.forEach( (question) => {
         answers.push(question.answer)
@@ -90,7 +78,7 @@ function App() {
 
   useEffect( () => {
     settingQuestions(); 
-  }, [])
+  }, [questions])
 
   function settingAnswers() {
     selectedQuestions.forEach( question => {
@@ -126,8 +114,6 @@ function App() {
       <Quiz 
         questions={questions} 
         answers={answers} 
-        randomNumber={randomNumber} 
-        slicedNumber={slicedNumber} 
         questionsDiv={questionsDiv}
         settingQuestions={settingQuestions} 
         submitAnswers={submitAnswers}
